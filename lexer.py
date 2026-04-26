@@ -45,7 +45,7 @@ class Lexer:
             return None
         return self.text[self.pos]
 
-    def get_next_token(self):
+    def get_next_token(self) -> Token:
         c: str | None = self.current_char()
         if c is None:
             return Token(TokenType.EOF)
@@ -71,8 +71,8 @@ class Lexer:
             return Token(TokenType.SEMICOLON)
         elif c.isnumeric():
             return self.read_int(c)
-
-        raise Exception(f"Unknown token: {c}")
+        else:
+            raise Exception(f"Unknown token: {c}")
 
     def read_int(self, lexeme: str):
         while True:

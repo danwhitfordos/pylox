@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import IntEnum, auto
 from typing import Any
 
-from lexer import Lexer, TokenType
+from lexer import Lexer, TokenType, Token
 
 
 class NodeType(IntEnum):
@@ -30,11 +30,11 @@ class Parser:
         self.previous = self.current
         self.current = self.lexer.get_next_token()
 
-    def get_atom(self):
+    def get_atom(self) -> Node:
         assert self.previous is not None
         return Node(NodeType.INT_ATOM, int(self.previous.value))
 
-    def get_expression(self):
+    def get_expression(self) -> Node:
         self.advance()
         assert self.current is not None
         if self.current.type == TokenType.SEMICOLON:
@@ -48,7 +48,7 @@ class Parser:
         else:
             raise Exception(f"Unexpected '{self.current}' parsing expression")
 
-    def get_next_node(self):
+    def get_next_node(self) -> Node | None:
         self.advance()
         assert self.current is not None
         if self.current.type == TokenType.EOF:
