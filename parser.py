@@ -22,11 +22,11 @@ class Parser:
     def __init__(self, lexer: Lexer):
         self.lexer = lexer
         self.previous = None
+        self.current = None
 
     def advance(self):
-        t = self.lexer.get_next_token()
-        self.previous = t
-        return t
+        self.previous = self.current
+        self.current = self.lexer.get_next_token()
 
     def get_atom(self):
         return Node(
@@ -35,13 +35,13 @@ class Parser:
         )
 
     def get_expression(self):
-        t = self.lexer.get_next_token()
-        if t.type == TokenType.SEMICOLON:
+        self.advance()
+        if self.current.type == TokenType.SEMICOLON:
             return self.get_atom()
-        elif t.type == TokenType.PLUS:
+        elif self.current.type == TokenType.PLUS:
             l = self.get_atom()
             op = BinaryOp.PLUS
-            self.previous = self.lexer.get_next_token()
+            self.advance()
             r = self.get_expression()
             return Node(NodeType.EXPR_BINARY, [op, l, r])
         else:
@@ -50,6 +50,6 @@ class Parser:
 
     def get_next_node(self):
         self.advance()
-        if self.previous.type == TokenType.EOF:
+        if self.current.type == TokenType.EOF:
             return None
         return self.get_expression()
