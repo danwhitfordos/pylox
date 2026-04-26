@@ -58,6 +58,32 @@ class TestParser(unittest.TestCase):
         got = parser.get_next_node()
         self.assertEqual(got, want)
 
+    def test_parser_two_expressions(self):
+        from parser import Parser
+        from lexer import Lexer
+
+        parser = Parser(Lexer("1+2; 2 + 3 ;"))
+        want_a = Node(
+            NodeType.EXPR_BINARY,
+            [
+                BinaryOp.PLUS,
+                Node(NodeType.INT_ATOM, 1),
+                Node(NodeType.INT_ATOM, 2),
+            ],
+        )
+        want_b = Node(
+            NodeType.EXPR_BINARY,
+            [
+                BinaryOp.PLUS,
+                Node(NodeType.INT_ATOM, 2),
+                Node(NodeType.INT_ATOM, 3),
+            ],
+        )
+        got = parser.get_next_node()
+        self.assertEqual(got, want_a)
+        got = parser.get_next_node()
+        self.assertEqual(got, want_b)
+
 
 if __name__ == "__main__":
     unittest.main()
