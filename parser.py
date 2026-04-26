@@ -31,10 +31,12 @@ class Parser:
         self.current = self.lexer.get_next_token()
 
     def get_atom(self):
+        assert self.previous is not None
         return Node(NodeType.INT_ATOM, int(self.previous.value))
 
     def get_expression(self):
         self.advance()
+        assert self.current is not None
         if self.current.type == TokenType.SEMICOLON:
             return self.get_atom()
         elif self.current.type == TokenType.PLUS:
@@ -44,10 +46,11 @@ class Parser:
             r = self.get_expression()
             return Node(NodeType.EXPR_BINARY, [op, l, r])
         else:
-            raise Exception(f"Unexpected '{t}' parsing expression")
+            raise Exception(f"Unexpected '{self.current}' parsing expression")
 
     def get_next_node(self):
         self.advance()
+        assert self.current is not None
         if self.current.type == TokenType.EOF:
             return None
         return self.get_expression()

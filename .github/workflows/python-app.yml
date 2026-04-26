@@ -25,5 +25,7 @@ jobs:
           enable-cache: true
       - name: Set up Python
         run: uv python install
+      - name: Type check
+        run: uvx ty check
       - name: Run tests
         run: uv run pytest
