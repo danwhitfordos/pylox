@@ -9,8 +9,10 @@ class NodeType(IntEnum):
     INT_ATOM = auto()
     EXPR_BINARY = auto()
 
+
 class BinaryOp(IntEnum):
     PLUS = auto()
+
 
 @dataclass
 class Node:
@@ -29,10 +31,7 @@ class Parser:
         self.current = self.lexer.get_next_token()
 
     def get_atom(self):
-        return Node(
-            NodeType.INT_ATOM,
-            int(self.previous.value)
-        )
+        return Node(NodeType.INT_ATOM, int(self.previous.value))
 
     def get_expression(self):
         self.advance()
@@ -46,7 +45,6 @@ class Parser:
             return Node(NodeType.EXPR_BINARY, [op, l, r])
         else:
             raise Exception(f"Unexpected '{t}' parsing expression")
-        
 
     def get_next_node(self):
         self.advance()
