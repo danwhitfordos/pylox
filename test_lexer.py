@@ -2,8 +2,9 @@ import unittest
 
 from lexer import TokenType, Token
 
+
 class TestLexer(unittest.TestCase):
-    
+
     def test_lexer_eof(self):
         from lexer import Lexer
 
@@ -20,7 +21,7 @@ class TestLexer(unittest.TestCase):
             TokenType.MINUS,
             TokenType.MUL,
             TokenType.DIV,
-            TokenType.EOF
+            TokenType.EOF,
         ]
         for w in want:
             got = lexer.get_next_token()
@@ -39,12 +40,13 @@ class TestLexer(unittest.TestCase):
             Token(TokenType.MUL),
             Token(TokenType.INTEGER, 3),
             Token(TokenType.SEMICOLON),
-            Token(TokenType.EOF)
+            Token(TokenType.EOF),
         ]
 
         for w in want:
             got = lexer.get_next_token()
             self.assertEqual(got, w)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

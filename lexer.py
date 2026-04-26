@@ -1,9 +1,10 @@
-from enum import Enum, auto
+from enum import IntEnum, auto
 from dataclasses import dataclass
 import sys
 from typing import Any
 
-class TokenType(Enum):
+
+class TokenType(IntEnum):
     EOF = auto()
     PLUS = auto()
     MINUS = auto()
@@ -14,12 +15,14 @@ class TokenType(Enum):
     RB = auto()
     SEMICOLON = auto()
 
+
 @dataclass
-class Token():
+class Token:
     type: TokenType
     value: Any = None
 
-class Lexer():
+
+class Lexer:
     def __init__(self, text: str):
         self.text = text
         self.pos = 0
@@ -28,7 +31,7 @@ class Lexer():
         cc = self.text[self.pos]
         if cc != expected:
             raise Exception("Advancing past unexpected token")
-        self.pos += 1        
+        self.pos += 1
 
     def current_char(self) -> str | None:
         if self.pos >= len(self.text):
@@ -36,7 +39,7 @@ class Lexer():
         cc = self.text[self.pos]
         self.pos += 1
         return cc
-    
+
     def peek(self):
         if self.pos >= len(self.text):
             return None
@@ -46,29 +49,29 @@ class Lexer():
         c: str | None = self.current_char()
         if c is None:
             return Token(TokenType.EOF)
-        
+
         while c.isspace():
             c = self.current_char()
             if c is None:
                 return Token(TokenType.EOF)
 
-        if c == '+':
+        if c == "+":
             return Token(TokenType.PLUS)
-        elif c == '-':
+        elif c == "-":
             return Token(TokenType.MINUS)
-        elif c == '*':
+        elif c == "*":
             return Token(TokenType.MUL)
-        elif c == '/':
+        elif c == "/":
             return Token(TokenType.DIV)
-        elif c == '(':
+        elif c == "(":
             return Token(TokenType.LB)
-        elif c == ')':
+        elif c == ")":
             return Token(TokenType.RB)
-        elif c == ';':
+        elif c == ";":
             return Token(TokenType.SEMICOLON)
         elif c.isnumeric():
             return self.read_int(c)
-        
+
         raise Exception(f"Unknown token: {c}")
 
     def read_int(self, lexeme: str):
@@ -81,4 +84,3 @@ class Lexer():
                 lexeme += c
             else:
                 return Token(TokenType.INTEGER, int(lexeme))
-
