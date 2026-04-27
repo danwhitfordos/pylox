@@ -5,7 +5,6 @@ from parser import Node, NodeType, BinaryOp
 
 
 class TestParser(unittest.TestCase):
-
     def test_parser_empty(self):
         from parser import Parser
         from lexer import Lexer

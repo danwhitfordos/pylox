@@ -4,7 +4,6 @@ from lexer import TokenType, Token
 
 
 class TestLexer(unittest.TestCase):
-
     def test_lexer_eof(self):
         from lexer import Lexer
 
