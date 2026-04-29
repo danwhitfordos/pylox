@@ -86,5 +86,7 @@ class Parser:
         if self.current.type == TokenType.EOF:
             return None
         expr = self.get_expression()
-        assert self.current.type == TokenType.SEMICOLON, f"Expected semicolon got {self.current}"
+        assert self.current.type == TokenType.SEMICOLON, (
+            f"Expected semicolon got {self.current}"
+        )
         return expr

@@ -164,7 +164,11 @@ class TestParser(unittest.TestCase):
                 BinaryOp.MULT,
                 Node(
                     NodeType.EXPR_BINARY,
-                    [BinaryOp.DIV, Node(NodeType.INT_ATOM, 10), Node(NodeType.INT_ATOM, 3)],
+                    [
+                        BinaryOp.DIV,
+                        Node(NodeType.INT_ATOM, 10),
+                        Node(NodeType.INT_ATOM, 3),
+                    ],
                 ),
                 Node(NodeType.INT_ATOM, 2),
             ],
@@ -183,7 +187,11 @@ class TestParser(unittest.TestCase):
                 BinaryOp.MULT,
                 Node(
                     NodeType.EXPR_BINARY,
-                    [BinaryOp.PLUS, Node(NodeType.INT_ATOM, 10), Node(NodeType.INT_ATOM, 3)],
+                    [
+                        BinaryOp.PLUS,
+                        Node(NodeType.INT_ATOM, 10),
+                        Node(NodeType.INT_ATOM, 3),
+                    ],
                 ),
                 Node(NodeType.INT_ATOM, 2),
             ],
