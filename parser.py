@@ -14,6 +14,7 @@ class BinaryOp(IntEnum):
     PLUS = auto()
     MINUS = auto()
     MULT = auto()
+    DIV = auto()
 
 
 @dataclass
@@ -33,60 +34,57 @@ class Parser:
         self.current = self.lexer.get_next_token()
 
     def get_atom(self) -> Node:
-        assert self.current is not None, {
-            "previous": self.previous,
-            "current": self.current,
-        }
-        assert self.current.type == TokenType.INTEGER, {
-            "previous": self.previous,
-            "current": self.current,
-        }
+        assert self.current is not None, "Unexpected end of input"
+        if self.current.type == TokenType.LB:
+            self.advance()
+            expr = self.get_expression()
+            assert self.current.type == TokenType.RB, "Expected closing parenthesis"
+            self.advance()
+            return expr
+
         self.advance()
         assert self.previous is not None
         return Node(NodeType.INT_ATOM, int(self.previous.value))
 
-    def get_plus_minus(self) -> Node:
+    def get_term(self) -> Node:
         assert self.current is not None
-        l = self.get_mult_div()
+        l = self.get_factor()
 
         while self.current.type in (TokenType.PLUS, TokenType.MINUS):
-            if self.current.type == TokenType.PLUS:
-                self.advance()
-                op = BinaryOp.PLUS
-                r = self.get_mult_div()
-                l = Node(NodeType.EXPR_BINARY, [op, l, r])
-            elif self.current.type == TokenType.MINUS:
-                self.advance()
-                op = BinaryOp.MINUS
-                r = self.get_mult_div()
-                l = Node(NodeType.EXPR_BINARY, [op, l, r])
+            self.advance()
+            assert self.previous is not None
+            op = (
+                BinaryOp.PLUS
+                if self.previous.type == TokenType.PLUS
+                else BinaryOp.MINUS
+            )
+            r = self.get_factor()
+            l = Node(NodeType.EXPR_BINARY, [op, l, r])
 
         return l
 
-    def get_mult_div(self) -> Node:
+    def get_factor(self) -> Node:
         assert self.current is not None
         l = self.get_atom()
 
-        if self.current.type == TokenType.MULT:
+        while self.current.type in (TokenType.MULT, TokenType.DIV):
             self.advance()
-            op = BinaryOp.MULT
+            assert self.previous is not None
+            op = BinaryOp.MULT if self.previous.type == TokenType.MULT else BinaryOp.DIV
             r = self.get_atom()
-            return Node(NodeType.EXPR_BINARY, [op, l, r])
-        else:
-            return l
+            l = Node(NodeType.EXPR_BINARY, [op, l, r])
+
+        return l
 
     def get_expression(self) -> Node:
         assert self.current is not None
-        expr = self.get_plus_minus()
-        assert self.current.type == TokenType.SEMICOLON, {
-            "previous": self.previous,
-            "current": self.current,
-        }
-        return expr
+        return self.get_term()
 
     def get_next_node(self) -> Node | None:
         self.advance()
         assert self.current is not None
         if self.current.type == TokenType.EOF:
             return None
-        return self.get_expression()
+        expr = self.get_expression()
+        assert self.current.type == TokenType.SEMICOLON, "Expected semicolon"
+        return expr
