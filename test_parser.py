@@ -141,6 +141,56 @@ class TestParser(unittest.TestCase):
         got = parser.get_next_node()
         self.assertEqual(got, want)
 
+    def test_parser_parens_add(self):
+        from parser import Parser
+        from lexer import Lexer
+
+        parser = Parser(Lexer("(10+3);"))
+        want = Node(
+            NodeType.EXPR_BINARY,
+            [BinaryOp.PLUS, Node(NodeType.INT_ATOM, 10), Node(NodeType.INT_ATOM, 3)],
+        )
+        got = parser.get_next_node()
+        self.assertEqual(got, want)
+
+    def test_parser_parens_multi(self):
+        from parser import Parser
+        from lexer import Lexer
+
+        parser = Parser(Lexer("(10/3) * 2;"))
+        want = Node(
+            NodeType.EXPR_BINARY,
+            [
+                BinaryOp.MULT,
+                Node(
+                    NodeType.EXPR_BINARY,
+                    [BinaryOp.DIV, Node(NodeType.INT_ATOM, 10), Node(NodeType.INT_ATOM, 3)],
+                ),
+                Node(NodeType.INT_ATOM, 2),
+            ],
+        )
+        got = parser.get_next_node()
+        self.assertEqual(got, want)
+
+    def test_parens_override_precedence(self):
+        from parser import Parser
+        from lexer import Lexer
+
+        parser = Parser(Lexer("(10+3) * 2;"))
+        want = Node(
+            NodeType.EXPR_BINARY,
+            [
+                BinaryOp.MULT,
+                Node(
+                    NodeType.EXPR_BINARY,
+                    [BinaryOp.PLUS, Node(NodeType.INT_ATOM, 10), Node(NodeType.INT_ATOM, 3)],
+                ),
+                Node(NodeType.INT_ATOM, 2),
+            ],
+        )
+        got = parser.get_next_node()
+        self.assertEqual(got, want)
+
 
 if __name__ == "__main__":
     unittest.main()

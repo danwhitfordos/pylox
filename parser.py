@@ -41,10 +41,10 @@ class Parser:
             assert self.current.type == TokenType.RB, "Expected closing parenthesis"
             self.advance()
             return expr
-
-        self.advance()
-        assert self.previous is not None
-        return Node(NodeType.INT_ATOM, int(self.previous.value))
+        else:
+            self.advance()
+            assert self.previous is not None, "Expected integer atom"
+            return Node(NodeType.INT_ATOM, int(self.previous.value))
 
     def get_term(self) -> Node:
         assert self.current is not None
@@ -86,5 +86,5 @@ class Parser:
         if self.current.type == TokenType.EOF:
             return None
         expr = self.get_expression()
-        assert self.current.type == TokenType.SEMICOLON, "Expected semicolon"
+        assert self.current.type == TokenType.SEMICOLON, f"Expected semicolon got {self.current}"
         return expr
