@@ -8,7 +8,7 @@ class TokenType(IntEnum):
     EOF = auto()
     PLUS = auto()
     MINUS = auto()
-    MUL = auto()
+    MULT = auto()
     DIV = auto()
     INTEGER = auto()
     LB = auto()
@@ -60,7 +60,7 @@ class Lexer:
         elif c == "-":
             return Token(TokenType.MINUS)
         elif c == "*":
-            return Token(TokenType.MUL)
+            return Token(TokenType.MULT)
         elif c == "/":
             return Token(TokenType.DIV)
         elif c == "(":

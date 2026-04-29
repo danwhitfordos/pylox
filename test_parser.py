@@ -43,15 +43,15 @@ class TestParser(unittest.TestCase):
             NodeType.EXPR_BINARY,
             [
                 BinaryOp.PLUS,
-                Node(NodeType.INT_ATOM, 1),
                 Node(
                     NodeType.EXPR_BINARY,
                     [
                         BinaryOp.PLUS,
+                        Node(NodeType.INT_ATOM, 1),
                         Node(NodeType.INT_ATOM, 2),
-                        Node(NodeType.INT_ATOM, 3),
                     ],
                 ),
+                Node(NodeType.INT_ATOM, 3),
             ],
         )
         got = parser.get_next_node()
@@ -82,6 +82,52 @@ class TestParser(unittest.TestCase):
         self.assertEqual(got, want_a)
         got = parser.get_next_node()
         self.assertEqual(got, want_b)
+
+    def test_parser_minus_mult(self):
+        from parser import Parser
+        from lexer import Lexer
+
+        parser = Parser(Lexer("1-2*3;"))
+        want = Node(
+            NodeType.EXPR_BINARY,
+            [
+                BinaryOp.MINUS,
+                Node(NodeType.INT_ATOM, 1),
+                Node(
+                    NodeType.EXPR_BINARY,
+                    [
+                        BinaryOp.MULT,
+                        Node(NodeType.INT_ATOM, 2),
+                        Node(NodeType.INT_ATOM, 3),
+                    ],
+                ),
+            ],
+        )
+        got = parser.get_next_node()
+        self.assertEqual(got, want)
+
+    def test_parser_mult_minus(self):
+        from parser import Parser
+        from lexer import Lexer
+
+        parser = Parser(Lexer("1*2-3;"))
+        want = Node(
+            NodeType.EXPR_BINARY,
+            [
+                BinaryOp.MINUS,
+                Node(
+                    NodeType.EXPR_BINARY,
+                    [
+                        BinaryOp.MULT,
+                        Node(NodeType.INT_ATOM, 1),
+                        Node(NodeType.INT_ATOM, 2),
+                    ],
+                ),
+                Node(NodeType.INT_ATOM, 3),
+            ],
+        )
+        got = parser.get_next_node()
+        self.assertEqual(got, want)
 
 
 if __name__ == "__main__":

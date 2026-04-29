@@ -18,7 +18,7 @@ class TestLexer(unittest.TestCase):
         want = [
             TokenType.PLUS,
             TokenType.MINUS,
-            TokenType.MUL,
+            TokenType.MULT,
             TokenType.DIV,
             TokenType.EOF,
         ]
@@ -36,7 +36,7 @@ class TestLexer(unittest.TestCase):
             Token(TokenType.PLUS),
             Token(TokenType.INTEGER, 2),
             Token(TokenType.RB),
-            Token(TokenType.MUL),
+            Token(TokenType.MULT),
             Token(TokenType.INTEGER, 3),
             Token(TokenType.SEMICOLON),
             Token(TokenType.EOF),
