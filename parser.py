@@ -62,7 +62,6 @@ class Parser:
                 l = Node(NodeType.EXPR_BINARY, [op, l, r])
 
         return l
-            
 
     def get_mult_div(self) -> Node:
         assert self.current is not None
